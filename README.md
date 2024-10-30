@@ -1,5 +1,5 @@
-# CatAdoption
-
+# CatAdoptHub
+   
 ## Overview
 CatAdoptHub is a Django web application designed to connect cat owners with potential adopters. Users can list their cats for adoption, browse available cats, and submit requests to adopt. The platform aims to create a community of cat lovers and facilitate the adoption process, ensuring every cat finds a loving home.
 
@@ -19,6 +19,6 @@ CatAdoptHub is a Django web application designed to connect cat owners with pote
 ## Installation
 1. Clone the repository:
    ```bash
-   git clone https://github.com/yamilobt8/CatAdoption.git
+   git clone https://github.com/yamilobt8/CatAdoptHub.git
 
-
+**Meow**
