@@ -1,0 +1,28 @@
+{% extends "core/layout.html" %}
+
+{% block body %}
+    <div class="container mx-auto px-4 py-8">
+        <h2 class="text-center mb-8 font-bold text-3xl text-gray-800">Cats Available for Adoption</h2>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+            {% for cat in cats %}
+                <!-- Link to Cat Details Page -->
+                <a href="{% url 'cat_detail' cat.id %}" class="block">
+                    <div class="bg-white shadow-md rounded-lg overflow-hidden transition-transform transform hover:scale-105 hover:shadow-lg">
+                        <img src="{{ cat.image }}" alt="{{ cat.name }}" class="w-full h-48 object-cover">
+                        <div class="p-4">
+                            <h3 class="text-xl font-bold text-gray-800 mb-2">{{ cat.name }}</h3>
+                            <p class="text-gray-600 mb-2"><strong>Address:</strong> {{ cat.address }}</p>
+                            <p class="text-gray-600 mb-2"><strong>Age:</strong> {{ cat.age }}</p>
+                            <hr class="my-2 border-gray-300">
+                            <p class="text-sm text-gray-700 font-semibold mt-2">
+                                <span class="text-gray-600">Owner:</span>
+                                <span class="text-yellow-500 text-lg font-bold">{{ cat.owner }}</span>
+                            </p>
+                        </div>
+                    </div>
+                </a>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}

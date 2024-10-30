@@ -1,0 +1,60 @@
+{% extends "core/layout.html" %}
+
+{% block body %}
+<div class="min-h-screen bg-gray-100 py-8">
+    <div class="container mx-auto px-4">
+        <div class="bg-white p-6 rounded-lg shadow-md">
+            <!-- Profile Picture -->
+            <div class="flex justify-center mb-6">
+                <img src="https://i.pinimg.com/474x/07/c4/72/07c4720d19a9e9edad9d0e939eca304a.jpg"
+                     alt="Profile Picture"
+                     class="w-32 h-32 rounded-full shadow-lg">
+            </div>
+
+            <h1 class="text-2xl font-bold text-gray-900 mb-4 text-center">My Profile</h1>
+
+            <!-- User Info Section -->
+            <div class="mb-8 text-center">
+                <h2 class="text-xl font-semibold text-gray-800">Welcome, {{ user.username }}</h2>
+                <p class="text-gray-600">Here you can see all the cats you have put up for adoption.</p>
+            </div>
+
+            <!-- Cats List Section -->
+            <div>
+                <h2 class="text-xl font-bold text-gray-900 mb-4">My Cats for Adoption</h2>
+
+                {% if cats %}
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        {% for cat in cats %}
+                            <div class="bg-white rounded-lg shadow-md overflow-hidden">
+                                <img src="{{ cat.image }}" alt="{{ cat.name }}" class="w-full h-48 object-cover">
+                                <div class="p-4">
+                                    <h3 class="text-lg font-bold text-gray-800">{{ cat.name }}</h3>
+                                    <p class="text-gray-600">Age: {{ cat.age }} years</p>
+                                    <p class="text-gray-600">Address: {{ cat.address }}</p>
+                                    <p class="text-gray-600">Description: {{ cat.description }}</p>
+                                    
+                                    <!-- Illness Status -->
+                                    <p class="text-gray-600">Ill: {{ cat.is_ill|yesno:"Yes,No" }}</p>
+
+                                    <!-- Check for Adoption Requests -->
+                                    {% if cat.adoption_requests.count > 0 %}
+                                        <div class="mt-4 bg-yellow-100 p-2 rounded-lg">
+                                            <p class="text-yellow-700 font-semibold">Adoption Requests: {{ cat.adoption_requests.count }}</p>
+                                            <a href="{% url 'view_adoption_requests' cat.id %}" class="text-blue-600 hover:underline">View Requests</a>
+                                        </div>
+                                    {% else %}
+                                        <p class="mt-4 text-gray-500">No adoption requests yet.</p>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <p class="text-gray-600">You haven't put any cats up for adoption yet.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

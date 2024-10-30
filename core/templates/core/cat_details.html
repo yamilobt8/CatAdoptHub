@@ -1,0 +1,150 @@
+{% extends 'core/layout.html' %}
+
+{% block body %}
+<!-- Error Message Section -->
+{% if error %}
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <strong>Error!</strong> {{ error_message }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+{% endif %}
+
+<div class="container my-5">
+    <!-- Title Section -->
+    <h2 class="text-center mb-4 text-3xl font-bold text-gray-800">{{ cat.name }}</h2>
+
+    <!-- Cat Detail Section -->
+    <div class="row">
+        <!-- Image Section -->
+        <div class="col-md-6 mb-5 d-flex justify-content-center">
+            <div class="border rounded-lg shadow-md overflow-hidden" style="width: 100%; height: 100%;">
+                <img src="{{ cat.image }}" alt="{{ cat.name }}" class="img-fluid" style="width: 100%; height: 100%; object-fit: cover;">
+            </div>
+        </div>
+
+        <!-- Description and Owner Section -->
+        <div class="col-md-6">
+            <!-- Owner Information -->
+            <p class="text-lg font-semibold text-gray-900">Owner:
+                <span class="text-green-800">{{ cat.owner }}</span>
+            </p>
+            <br>
+            <!-- Description -->
+            <p class="text-lg font-semibold text-gray-900">Description:</p>
+            <p class="text-gray-700 text-lg leading-relaxed mb-4">{{ cat.description }}</p>
+
+            <!-- Health and Adoption Information -->
+            <div class="bg-light p-4 rounded-lg shadow-sm mb-4">
+                <p class="text-lg font-semibold text-gray-900">Age:
+                    {% if cat.age <= 0 %}
+                        <span class="text-green-800">Didn't Complete a year</span>
+                    {% else %}
+                        <span class="text-green-600">{{ cat.age }} years</span>
+                    {% endif %}
+                </p>
+                <p class="text-lg font-semibold text-gray-900">Health Status:
+                    <span class="text-green-300">
+                        {% if cat.is_ill %}
+                            <span class="text-green-600">Ill</span>
+                            <br>
+                            {% if cat.type_of_disease %}
+                                <span class="text-red-600">Illness: {{ cat.type_of_disease }}</span>
+                            {% endif %}
+                        {% else %}
+                            <span class="text-green-600">Healthy</span>
+                        {% endif %}
+                    </span>
+                </p>
+                <p class="text-lg font-semibold text-gray-900">Adoption Status:
+                    {% if cat.is_adopted %}
+                        <span class="text-red-600">Adopted</span>
+                    {% else %}
+                        <span class="text-green-600">Available</span>
+                    {% endif %}
+                </p>
+            </div>
+
+            <!-- Watchlist Button -->
+            {% if user.is_authenticated %}
+                {% if is_owner and not cat.is_adopted %}
+                    <h2 class="text-center mb-4 text-3xl font-bold text-gray-800">Adoption Requests</h2>
+                    <ul class="bg-green-100 rounded-lg shadow-md p-4 space-y-2">
+                        {% for request in request_list %}
+                            <li class="flex items-center justify-between p-2 border-b border-gray-200">
+                                <div>
+                                    <span class="text-lg font-medium text-gray-800">{{ request.user.username }}</span>
+                                    <span class="text-sm text-gray-500">{{ request.request_date|date:"F j, Y, g:i a" }}</span>
+                                </div>
+                                <form method="POST" action="{% url 'approve_adoption_request' cat_id %}" class="ml-4">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="request_id" value="{{ request.id }}">
+                                    <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-1 px-3 rounded">
+                                        Approve
+                                    </button>
+                                </form>
+                            </li>
+                        {% empty %}
+                            <li class="p-2 text-center text-gray-500">No adoption requests yet.</li>
+                        {% endfor %}
+                    </ul>
+                     <form method="POST" class="mt-3">
+                        {% csrf_token %}
+                        <button type="submit" name="close_adoption" class="btn btn-danger w-full">Close Adoption</button>
+                    </form>
+                {% else %}
+                    <form method="POST" action="#" class="mt-3">
+                        {% csrf_token %}
+                        {% if not user_has_requested %}
+                            <button type="submit" name="adoption_request" class="btn btn-danger w-full">Request To Adopt</button>
+                        {% else %}
+                            <button type="submit" name="cancel_adoption_request" class="btn btn-primary w-full">Cancel Adoption Request</button>
+                        {% endif %}
+                    </form>
+                {% endif %}
+            {% else %}
+                <p class="text-center">
+                    <a href="{% url 'login' %}" class="btn btn-success btn-lg w-full">Log in to add to your watchlist and request adoption.</a>
+                </p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- Comments Section -->
+<div class="container my-5">
+    <h3 class="text-center mb-4 font-weight-bold">Comments</h3>
+
+    <!-- Comment Form -->
+    {% if user.is_authenticated %}
+        <form method="POST" action="">
+            {% csrf_token %}
+            <div class="mb-3">
+                <textarea class="form-control" name="comment" rows="3" placeholder="Add a comment..." required></textarea>
+            </div>
+            <button type="submit" class="btn btn-success btn-lg w-full">Submit</button>
+        </form>
+    {% else %}
+        <p class="text-center">
+            <a href="{% url 'login' %}" class="btn btn-success btn-lg w-full">Log in to leave a comment</a>
+        </p>
+    {% endif %}
+
+    <!-- Display Comments -->
+    <div class="mt-4">
+        {% if comments %}
+            {% for comment in comments %}
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <h6 class="card-subtitle mb-2 text-muted">{{ comment.user.username }}</h6>
+                        <p class="card-text">{{ comment.content }}</p>
+                        <p class="text-right"><small class="text-muted">{{ comment.timestamp|date:"F j, Y, g:i a" }}</small></p>
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p class="text-center text-muted">No comments yet. Be the first to comment!</p>
+        {% endif %}
+    </div>
+</div>
+
+{% endblock %}

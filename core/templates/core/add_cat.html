@@ -1,0 +1,88 @@
+{% extends "core/layout.html" %}
+
+{% block body %}
+    <div class="flex items-center justify-center min-h-screen bg-gray-100">
+        <div class="bg-white p-8 rounded-lg shadow-lg w-full max-w-lg mx-auto">
+            <h2 class="text-center mb-6 text-3xl font-extrabold text-gray-900">Put a Cat Up for Adoption</h2>
+
+            <form method="post" class="space-y-6">
+                {% csrf_token %}
+
+                <!-- Name Field -->
+                <div>
+                    <input id="name" name="name" type="text" maxlength="50" required placeholder="Name"
+                           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
+
+                <!-- Age Field -->
+                <div>
+                    <input id="age" name="age" type="number" required placeholder="Age"
+                           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
+
+                <!-- Address Field -->
+                <div>
+                    <input id="address" name="address" type="text" maxlength="50" required placeholder="Address"
+                           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
+
+                <!-- Phone Field -->
+                <div>
+                    <input id="phone" name="phone" type="text" maxlength="50" required placeholder="Phone"
+                           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
+
+                <!-- Description Field -->
+                <div>
+                    <input id="description" name="description" type="text" maxlength="50" required placeholder="Description"
+                           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
+
+                <!-- Image URL Field -->
+                <div>
+                    <input id="image" name="image" type="url" required placeholder="Image URL"
+                           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
+
+                <!-- Is Ill Field with Radio Buttons -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Is Ill?</label>
+                    <div class="flex items-center justify-center space-x-6">
+                        <label class="flex items-center">
+                            <input type="radio" name="is_ill" value="True" class="h-4 w-4 text-blue-600 border-gray-300 focus:ring-blue-500" onclick="toggleIllnessField(true)">
+                            <span class="ml-2 text-gray-700">Yes</span>
+                        </label>
+                        <label class="flex items-center">
+                            <input type="radio" name="is_ill" value="False" checked class="h-4 w-4 text-blue-600 border-gray-300 focus:ring-blue-500" onclick="toggleIllnessField(false)">
+                            <span class="ml-2 text-gray-700">No</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Illness Name Field (Initially Hidden) -->
+                <div id="illness-field" class="hidden">
+                    <input id="illness" name="illness" type="text" maxlength="50" placeholder="Type of disease"
+                           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
+
+                <!-- Submit Button -->
+                <div>
+                    <input class="w-full py-2 text-white bg-blue-600 rounded-lg cursor-pointer hover:bg-blue-700 focus:ring-2 focus:ring-blue-500"
+                           type="submit" value="Submit">
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- JavaScript to Toggle Illness Field -->
+    <script>
+        function toggleIllnessField(isIll) {
+            const illnessField = document.getElementById("illness-field");
+            if (isIll) {
+                illnessField.classList.remove("hidden");
+            } else {
+                illnessField.classList.add("hidden");
+            }
+        }
+    </script>
+{% endblock %}
